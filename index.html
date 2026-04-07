@@ -3,42 +3,2118 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Writtenwhisperscrotchets</title>
-  </head>
-  <body>
-    <header class="navbar">
-      <h1 class="logo">The Written Whispers Crotchets</h1>
-      <nav class="nav-links">
-        <a href="Home">Home |</a>
-        <a href="Shop">Shop |</a>
-        <a href="About">About |</a>
-        <a href="Contact">Contact</a>
-      </nav>
-    </header>
+    <title>TheWrittenWhispersCrochet</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Jost:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
     <style>
-      .navbar {
+      /* ===== CSS VARIABLES (THEME) ===== */
+      :root {
+        --cream: #fdf6ee;
+        --blush: #e8c9b0;
+        --rose: #c47a5a;
+        --deep: #3d1f14;
+        --sage: #8aab8e;
+        --white: #ffffff;
+        --shadow: 0 4px 24px rgba(61, 31, 20, 0.1);
+        --radius: 14px;
+        --font-head: "Playfair Display", serif;
+        --font-body: "Jost", sans-serif;
+      }
+
+      /* ===== RESET ===== */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: var(--font-body);
+        background: var(--cream);
+        color: var(--deep);
+        min-height: 100vh;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+      button {
+        cursor: pointer;
+        font-family: var(--font-body);
+      }
+      img {
+        max-width: 100%;
+        display: block;
+      }
+      ul {
+        list-style: none;
+      }
+
+      /* ===== UTILITY ===== */
+      .hidden {
+        display: none !important;
+      }
+      .page {
+        display: none;
+      }
+      .page.active {
+        display: block;
+      }
+
+      /* ===== TOAST ===== */
+      #toast {
+        position: fixed;
+        bottom: 28px;
+        left: 50%;
+        transform: translateX(-50%) translateY(20px);
+        background: var(--deep);
+        color: #fff;
+        padding: 12px 26px;
+        border-radius: 40px;
+        font-size: 14px;
+        opacity: 0;
+        transition: all 0.35s;
+        z-index: 9999;
+        pointer-events: none;
+      }
+      #toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      /* ===== NAV ===== */
+      nav {
+        background: var(--white);
+        border-bottom: 1px solid #f0e0d0;
+        padding: 0 32px;
+        height: 68px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 12px rgba(61, 31, 20, 0.06);
+      }
+      .nav-logo {
+        font-family: var(--font-head);
+        font-size: 1.35rem;
+        color: var(--rose);
+        letter-spacing: 0.5px;
+        line-height: 1.2;
+      }
+      .nav-logo span {
+        display: block;
+        font-size: 0.72rem;
+        font-family: var(--font-body);
+        color: var(--blush);
+        font-weight: 400;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+      }
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .nav-links button {
+        background: none;
+        border: none;
+        font-size: 14px;
+        color: var(--deep);
+        padding: 7px 14px;
+        border-radius: 8px;
+        transition: background 0.2s;
+      }
+      .nav-links button:hover {
+        background: var(--cream);
+      }
+      .btn-primary {
+        background: var(--rose) !important;
+        color: #fff !important;
+        padding: 8px 20px !important;
+        border-radius: 22px !important;
+        font-weight: 500 !important;
+      }
+      .btn-primary:hover {
+        background: #b0684a !important;
+      }
+      .nav-cart-btn {
+        position: relative;
+        background: none;
+        border: none;
+        font-size: 22px;
+        padding: 6px 10px;
+        border-radius: 8px;
+        transition: background 0.2s;
+      }
+      .nav-cart-btn:hover {
+        background: var(--cream);
+      }
+      #cart-count {
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        background: var(--rose);
+        color: #fff;
+        font-size: 10px;
+        font-weight: 600;
+        width: 17px;
+        height: 17px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* ===== HERO SLIDER ===== */
+      .hero {
+        position: relative;
+        overflow: hidden;
+        height: 480px;
+        background: var(--deep);
+      }
+      .hero-slides {
+        display: flex;
+        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        height: 100%;
+      }
+      .hero-slide {
+        min-width: 100%;
+        height: 100%;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .hero-slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0.55;
+        position: absolute;
+        inset: 0;
+      }
+      .hero-content {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+        color: #fff;
+        padding: 0 24px;
+      }
+      .hero-content h1 {
+        font-family: var(--font-head);
+        font-size: clamp(2rem, 5vw, 3.4rem);
+        margin-bottom: 14px;
+      }
+      .hero-content p {
+        font-size: 1.05rem;
+        opacity: 0.85;
+        margin-bottom: 26px;
+      }
+      .hero-cta {
+        background: var(--rose);
+        color: #fff;
+        border: none;
+        padding: 13px 34px;
+        border-radius: 30px;
+        font-size: 15px;
+        font-weight: 500;
+        transition:
+          background 0.2s,
+          transform 0.15s;
+      }
+      .hero-cta:hover {
+        background: #b0684a;
+        transform: translateY(-2px);
+      }
+      .slider-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 10;
+        background: rgba(255, 255, 255, 0.18);
+        border: 1.5px solid rgba(255, 255, 255, 0.4);
+        color: #fff;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        font-size: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+      }
+      .slider-btn:hover {
+        background: rgba(255, 255, 255, 0.35);
+      }
+      .slider-btn.prev {
+        left: 18px;
+      }
+      .slider-btn.next {
+        right: 18px;
+      }
+      .slider-dots {
+        position: absolute;
+        bottom: 16px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 8px;
+        z-index: 10;
+      }
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.45);
+        border: none;
+        transition: background 0.2s;
+      }
+      .dot.active {
+        background: #fff;
+      }
+
+      /* ===== SECTION ===== */
+      .section {
+        padding: 56px 32px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .section-title {
+        font-family: var(--font-head);
+        font-size: 2rem;
+        color: var(--deep);
+        margin-bottom: 8px;
+      }
+      .section-sub {
+        color: var(--rose);
+        font-size: 0.95rem;
+        margin-bottom: 32px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+
+      /* ===== PRODUCT GRID ===== */
+      .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 24px;
+      }
+      .product-card {
+        background: var(--white);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        transition:
+          transform 0.22s,
+          box-shadow 0.22s;
+        cursor: pointer;
+      }
+      .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 32px rgba(61, 31, 20, 0.14);
+      }
+      .product-img-wrap {
+        position: relative;
+        width: 100%;
+        padding-top: 100%;
+        overflow: hidden;
+        background: #f9eee5;
+      }
+      .product-img-wrap img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s;
+      }
+      .product-card:hover .product-img-wrap img {
+        transform: scale(1.06);
+      }
+      .product-badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: var(--sage);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 3px 10px;
+        border-radius: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .product-info {
+        padding: 14px 16px 18px;
+      }
+      .product-name {
+        font-weight: 600;
+        font-size: 15px;
+        margin-bottom: 5px;
+        line-height: 1.35;
+      }
+      .product-seller {
+        font-size: 12px;
+        color: #999;
+        margin-bottom: 8px;
+      }
+      .product-bottom {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .product-price {
+        font-family: var(--font-head);
+        font-size: 1.15rem;
+        color: var(--rose);
+        font-weight: 700;
+      }
+      .add-cart-btn {
+        background: var(--cream);
+        border: 1.5px solid var(--blush);
+        color: var(--rose);
+        font-size: 12px;
+        font-weight: 600;
+        padding: 6px 13px;
+        border-radius: 16px;
+        transition: all 0.18s;
+      }
+      .add-cart-btn:hover {
+        background: var(--rose);
+        border-color: var(--rose);
+        color: #fff;
+      }
+
+      /* ===== PRODUCT MODAL ===== */
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(30, 10, 5, 0.55);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+      .modal-box {
+        background: var(--white);
+        border-radius: 18px;
+        max-width: 740px;
+        width: 100%;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 20px 60px rgba(61, 31, 20, 0.22);
+        animation: popIn 0.25s ease;
+      }
+      @keyframes popIn {
+        from {
+          transform: scale(0.94);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      .modal-inner {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+      @media (max-width: 600px) {
+        .modal-inner {
+          grid-template-columns: 1fr;
+        }
+      }
+      .modal-img-col {
+        background: #f9eee5;
+        border-radius: 18px 0 0 18px;
+        overflow: hidden;
+      }
+      .modal-img-col img {
+        width: 100%;
+        height: 100%;
+        min-height: 280px;
+        object-fit: cover;
+      }
+      .modal-info-col {
+        padding: 28px 28px 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .modal-close {
+        align-self: flex-end;
+        background: var(--cream);
+        border: none;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        font-size: 18px;
+        line-height: 1;
+      }
+      .modal-title {
+        font-family: var(--font-head);
+        font-size: 1.5rem;
+        color: var(--deep);
+        line-height: 1.25;
+      }
+      .modal-price {
+        font-family: var(--font-head);
+        font-size: 1.6rem;
+        color: var(--rose);
+      }
+      .modal-desc {
+        font-size: 14px;
+        color: #666;
+        line-height: 1.6;
+      }
+      .modal-seller-info {
+        background: var(--cream);
+        border-radius: 10px;
+        padding: 12px 14px;
+        font-size: 13px;
+      }
+      .modal-seller-info strong {
+        display: block;
+        font-size: 14px;
+        margin-bottom: 4px;
+      }
+      .modal-seller-info a {
+        color: var(--rose);
+      }
+      .modal-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 6px;
+      }
+      .btn-order {
+        background: var(--rose);
+        color: #fff;
+        border: none;
+        padding: 13px;
+        border-radius: 12px;
+        font-size: 15px;
+        font-weight: 600;
+        transition:
+          background 0.2s,
+          transform 0.15s;
+      }
+      .btn-order:hover {
+        background: #b0684a;
+        transform: translateY(-1px);
+      }
+      .btn-cart-modal {
+        background: none;
+        border: 1.5px solid var(--blush);
+        color: var(--deep);
+        padding: 11px;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.18s;
+      }
+      .btn-cart-modal:hover {
+        background: var(--cream);
+      }
+
+      /* ===== AUTH PAGES ===== */
+      .auth-wrap {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #fdf0e6 0%, #f5ddd0 100%);
+        padding: 24px;
+      }
+      .auth-card {
+        background: var(--white);
+        border-radius: 22px;
+        padding: 40px 38px;
+        width: 100%;
+        max-width: 440px;
+        box-shadow: 0 16px 48px rgba(61, 31, 20, 0.12);
+      }
+      .auth-logo {
+        font-family: var(--font-head);
+        font-size: 1.6rem;
+        color: var(--rose);
+        text-align: center;
+        margin-bottom: 6px;
+      }
+      .auth-sub {
+        text-align: center;
+        font-size: 13px;
+        color: #aaa;
+        margin-bottom: 28px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+      .role-tabs {
+        display: flex;
+        background: var(--cream);
+        border-radius: 12px;
+        padding: 4px;
+        margin-bottom: 26px;
+      }
+      .role-tab {
+        flex: 1;
+        text-align: center;
+        padding: 9px;
+        border-radius: 9px;
+        font-size: 14px;
+        font-weight: 500;
+        border: none;
+        background: transparent;
+        color: #888;
+        transition: all 0.2s;
+      }
+      .role-tab.active {
+        background: var(--white);
+        color: var(--rose);
+        box-shadow: 0 2px 8px rgba(61, 31, 20, 0.08);
+      }
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-bottom: 16px;
+      }
+      .form-group label {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--deep);
+      }
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        border: 1.5px solid #e8ddd5;
+        border-radius: 10px;
+        padding: 11px 14px;
+        font-size: 14px;
+        font-family: var(--font-body);
+        color: var(--deep);
+        background: var(--cream);
+        transition: border-color 0.18s;
+      }
+      .form-group input:focus,
+      .form-group select:focus,
+      .form-group textarea:focus {
+        outline: none;
+        border-color: var(--rose);
+        background: #fff;
+      }
+      .form-group textarea {
+        resize: vertical;
+        min-height: 80px;
+      }
+      .btn-full {
+        width: 100%;
+        background: var(--rose);
+        color: #fff;
+        border: none;
+        padding: 13px;
+        border-radius: 12px;
+        font-size: 15px;
+        font-weight: 600;
+        transition:
+          background 0.2s,
+          transform 0.15s;
+        margin-top: 4px;
+      }
+      .btn-full:hover {
+        background: #b0684a;
+        transform: translateY(-1px);
+      }
+      .auth-switch {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 13px;
+        color: #999;
+      }
+      .auth-switch span {
+        color: var(--rose);
+        cursor: pointer;
+        font-weight: 500;
+      }
+      .auth-switch span:hover {
+        text-decoration: underline;
+      }
+
+      /* ===== SELLER DASHBOARD ===== */
+      .dashboard-wrap {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 40px 24px;
+      }
+      .dash-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 32px;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .dash-title {
+        font-family: var(--font-head);
+        font-size: 1.8rem;
+      }
+      .dash-tabs {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 28px;
+        flex-wrap: wrap;
+      }
+      .dash-tab {
+        padding: 9px 22px;
+        border-radius: 22px;
+        border: 1.5px solid #e0d0c8;
+        background: none;
+        font-size: 14px;
+        font-weight: 500;
+        color: #888;
+        transition: all 0.18s;
+      }
+      .dash-tab.active {
+        background: var(--rose);
+        border-color: var(--rose);
+        color: #fff;
+      }
+      .dash-panel {
+        display: none;
+      }
+      .dash-panel.active {
+        display: block;
+      }
+
+      /* Upload form */
+      .upload-form {
+        background: var(--white);
+        border-radius: 18px;
+        padding: 32px;
+        box-shadow: var(--shadow);
+        max-width: 680px;
+      }
+      .upload-form h3 {
+        font-family: var(--font-head);
+        font-size: 1.3rem;
+        margin-bottom: 22px;
+      }
+      .img-upload-area {
+        border: 2px dashed var(--blush);
+        border-radius: 12px;
+        padding: 32px;
+        text-align: center;
+        cursor: pointer;
+        transition: border-color 0.2s;
+        margin-bottom: 8px;
+      }
+      .img-upload-area:hover {
+        border-color: var(--rose);
+      }
+      .img-upload-area input {
+        display: none;
+      }
+      .img-preview-grid {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 16px;
+      }
+      .img-preview-grid img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1.5px solid var(--blush);
+      }
+      .img-preview-grid .img-remove {
+        width: 80px;
+        height: 80px;
+        background: #ffeee8;
+        border: 1.5px solid #ffb8a0;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        position: relative;
+      }
+
+      /* My products table */
+      .my-products-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 18px;
+      }
+      .my-product-card {
+        background: var(--white);
+        border-radius: 14px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+      .my-product-card img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+      }
+      .my-product-card .mp-info {
+        padding: 12px 14px;
+      }
+      .my-product-card .mp-name {
+        font-weight: 600;
+        font-size: 14px;
+        margin-bottom: 4px;
+      }
+      .my-product-card .mp-price {
+        color: var(--rose);
+        font-weight: 700;
+        font-size: 15px;
+      }
+      .mp-actions {
+        display: flex;
+        gap: 6px;
+        margin-top: 10px;
+      }
+      .mp-actions button {
+        flex: 1;
+        padding: 6px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 500;
+        border: none;
+      }
+      .btn-edit-p {
+        background: var(--cream);
+        color: var(--deep);
+      }
+      .btn-del-p {
+        background: #ffe5e0;
+        color: #c0392b;
+      }
+
+      /* Orders panel */
+      .orders-list {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .order-item {
+        background: var(--white);
+        border-radius: 14px;
+        padding: 18px 20px;
+        box-shadow: var(--shadow);
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+      .order-img {
+        width: 60px;
+        height: 60px;
+        border-radius: 10px;
+        object-fit: cover;
+        flex-shrink: 0;
+      }
+      .order-details {
+        flex: 1;
+        min-width: 140px;
+      }
+      .order-details strong {
+        display: block;
+        font-size: 15px;
+      }
+      .order-details span {
+        font-size: 13px;
+        color: #888;
+      }
+      .order-status {
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .status-pending {
+        background: #fff8e1;
+        color: #f9a825;
+      }
+      .status-done {
+        background: #e8f5e9;
+        color: #388e3c;
+      }
+
+      /* ===== CART SIDEBAR ===== */
+      .cart-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(30, 10, 5, 0.4);
+        z-index: 500;
+      }
+      .cart-sidebar {
+        position: fixed;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 360px;
+        max-width: 95vw;
+        background: var(--white);
+        z-index: 501;
+        box-shadow: -6px 0 40px rgba(61, 31, 20, 0.14);
+        display: flex;
+        flex-direction: column;
+        animation: slideIn 0.28s ease;
+      }
+      @keyframes slideIn {
+        from {
+          transform: translateX(100%);
+        }
+        to {
+          transform: translateX(0);
+        }
+      }
+      .cart-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 22px 24px 16px;
+        border-bottom: 1px solid #f0e0d0;
+      }
+      .cart-header h2 {
+        font-family: var(--font-head);
+        font-size: 1.35rem;
+      }
+      .cart-close {
+        background: var(--cream);
+        border: none;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        font-size: 18px;
+      }
+      .cart-items {
+        flex: 1;
+        overflow-y: auto;
+        padding: 18px 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .cart-item {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      .cart-item img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 10px;
+        flex-shrink: 0;
+      }
+      .cart-item-info {
+        flex: 1;
+      }
+      .cart-item-info strong {
+        display: block;
+        font-size: 14px;
+      }
+      .cart-item-info span {
+        font-size: 13px;
+        color: var(--rose);
+        font-weight: 600;
+      }
+      .cart-item-remove {
+        background: #ffe5e0;
+        border: none;
+        color: #c0392b;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        font-size: 14px;
+        flex-shrink: 0;
+      }
+      .cart-footer {
+        padding: 18px 24px;
+        border-top: 1px solid #f0e0d0;
+      }
+      .cart-total {
         display: flex;
         justify-content: space-between;
-        align-items: center;
-        padding: 15px 40px;
-        background-color: #fff;
-        border-bottom: 1px solid;
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 14px;
       }
-      .logo {
-        font-family: "Great Vibes", cursive;
-        font-size: 28px;
-        margin: 0;
+      .cart-total span:last-child {
+        font-family: var(--font-head);
+        color: var(--rose);
+        font-size: 1.2rem;
       }
-      .nav-links a {
-        margin-left: 25px;
-        text-decoration: none;
-        color: #333;
-        font-size: 16px
-        transition: 0.35em;
+      .cart-empty {
+        text-align: center;
+        padding: 48px 0;
+        color: #bbb;
+        font-size: 15px;
       }
-      .nav-links a:hover {
-        color:#ff7a00;
+
+      /* ===== FOOTER ===== */
+      footer {
+        background: var(--deep);
+        color: rgba(255, 255, 255, 0.7);
+        padding: 40px 32px 24px;
+        margin-top: 40px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 28px;
+      }
+      .footer-brand {
+        font-family: var(--font-head);
+        font-size: 1.2rem;
+        color: var(--blush);
+        margin-bottom: 8px;
+      }
+      footer h4 {
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: var(--blush);
+        margin-bottom: 12px;
+      }
+      footer p,
+      footer li {
+        font-size: 13px;
+        line-height: 1.8;
+      }
+      .footer-bottom {
+        grid-column: 1/-1;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 18px;
+        font-size: 12px;
+        text-align: center;
+      }
+
+      /* ===== RESPONSIVE ===== */
+      @media (max-width: 768px) {
+        nav {
+          padding: 0 16px;
         }
+        .section {
+          padding: 36px 16px;
+        }
+        .hero {
+          height: 340px;
+        }
+        .cart-sidebar {
+          width: 100%;
+        }
+        .upload-form {
+          padding: 22px;
+        }
+      }
+      @media (max-width: 480px) {
+        .nav-links .hide-mobile {
+          display: none;
+        }
+        .product-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 14px;
+        }
+      }
     </style>
+  </head>
+  <body>
+    <!-- ===== TOAST ===== -->
+    <div id="toast"></div>
+
+    <!-- ===== NAVIGATION ===== -->
+    <nav>
+      <div class="nav-logo" onclick="showPage('home')" style="cursor: pointer">
+        TheWrittenWhispers
+        <span>Crochet</span>
+      </div>
+      <div class="nav-links">
+        <button onclick="showPage('home')" class="hide-mobile">Shop</button>
+        <button
+          id="nav-auth-btn"
+          class="btn-primary"
+          onclick="showPage('login')"
+        >
+          Login
+        </button>
+        <button
+          id="nav-dash-btn"
+          class="hidden"
+          onclick="showPage('dashboard')"
+        >
+          Dashboard
+        </button>
+        <button id="nav-logout-btn" class="hidden" onclick="logout()">
+          Logout
+        </button>
+        <button class="nav-cart-btn" onclick="toggleCart()">
+          🛒<span id="cart-count">0</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- ===== CART SIDEBAR ===== -->
+    <div
+      id="cart-overlay"
+      class="cart-overlay hidden"
+      onclick="toggleCart()"
+    ></div>
+    <div id="cart-sidebar" class="cart-sidebar hidden">
+      <div class="cart-header">
+        <h2>Your Cart</h2>
+        <button class="cart-close" onclick="toggleCart()">✕</button>
+      </div>
+      <div class="cart-items" id="cart-items-list"></div>
+      <div class="cart-footer">
+        <div class="cart-total">
+          <span>Total</span><span id="cart-total-price">KSh 0</span>
+        </div>
+        <button class="btn-full" onclick="checkout()">Place Order</button>
+      </div>
+    </div>
+
+    <!-- ===== PRODUCT MODAL ===== -->
+    <div
+      id="product-modal"
+      class="modal-overlay hidden"
+      onclick="closeModal(event)"
+    >
+      <div class="modal-box" id="modal-box">
+        <div class="modal-inner">
+          <div class="modal-img-col"><img id="modal-img" src="" alt="" /></div>
+          <div class="modal-info-col">
+            <button
+              class="modal-close"
+              onclick="
+                document.getElementById('product-modal').classList.add('hidden')
+              "
+            >
+              ✕
+            </button>
+            <h2 class="modal-title" id="modal-name"></h2>
+            <div class="modal-price" id="modal-price"></div>
+            <p class="modal-desc" id="modal-desc"></p>
+            <div class="modal-seller-info" id="modal-seller-info"></div>
+            <div class="modal-actions">
+              <button class="btn-order" onclick="placeOrder()">
+                🛍 Order Now
+              </button>
+              <button class="btn-cart-modal" onclick="addToCartFromModal()">
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================= -->
+    <!-- PAGE: HOME / SHOP -->
+    <!-- ============================= -->
+    <div id="page-home" class="page active">
+      <!-- Hero Slider -->
+      <div class="hero">
+        <div class="hero-slides" id="hero-slides">
+          <!-- Slides injected by JS -->
+        </div>
+        <button class="slider-btn prev" onclick="changeSlide(-1)">
+          &#8592;
+        </button>
+        <button class="slider-btn next" onclick="changeSlide(1)">
+          &#8594;
+        </button>
+        <div class="slider-dots" id="slider-dots"></div>
+      </div>
+
+      <!-- Products Section -->
+      <div class="section">
+        <p class="section-sub">Handmade with love</p>
+        <h2 class="section-title">Our Crochet Collection</h2>
+        <!-- Filter buttons -->
+        <div
+          style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px"
+          id="filter-btns"
+        >
+          <button
+            onclick="filterProducts('all')"
+            class="dash-tab active"
+            id="filter-all"
+          >
+            All
+          </button>
+          <button
+            onclick="filterProducts('bags')"
+            class="dash-tab"
+            id="filter-bags"
+          >
+            Bags
+          </button>
+          <button
+            onclick="filterProducts('hats')"
+            class="dash-tab"
+            id="filter-hats"
+          >
+            Hats
+          </button>
+          <button
+            onclick="filterProducts('decor')"
+            class="dash-tab"
+            id="filter-decor"
+          >
+            Decor
+          </button>
+          <button
+            onclick="filterProducts('clothing')"
+            class="dash-tab"
+            id="filter-clothing"
+          >
+            Clothing
+          </button>
+        </div>
+        <div class="product-grid" id="product-grid"></div>
+      </div>
+    </div>
+
+    <!-- ============================= -->
+    <!-- PAGE: LOGIN / REGISTER -->
+    <!-- ============================= -->
+    <div id="page-login" class="page">
+      <div class="auth-wrap">
+        <div class="auth-card">
+          <div class="auth-logo">TheWrittenWhispers</div>
+          <div class="auth-sub">Crochet Store</div>
+          <div class="role-tabs">
+            <button
+              class="role-tab active"
+              id="tab-customer"
+              onclick="switchRole('customer')"
+            >
+              Customer
+            </button>
+            <button
+              class="role-tab"
+              id="tab-seller"
+              onclick="switchRole('seller')"
+            >
+              Seller
+            </button>
+          </div>
+          <!-- Login Form -->
+          <div id="form-login">
+            <div class="form-group">
+              <label>Email</label>
+              <input
+                type="email"
+                id="login-email"
+                placeholder="you@example.com"
+              />
+            </div>
+            <div class="form-group">
+              <label>Password</label>
+              <input
+                type="password"
+                id="login-password"
+                placeholder="••••••••"
+              />
+            </div>
+            <button class="btn-full" onclick="handleLogin()">Login</button>
+            <div class="auth-switch">
+              Don't have an account?
+              <span onclick="toggleAuthMode()">Register</span>
+            </div>
+          </div>
+          <!-- Register Form -->
+          <div id="form-register" class="hidden">
+            <div class="form-group">
+              <label>Full Name</label>
+              <input type="text" id="reg-name" placeholder="Jane Doe" />
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input
+                type="email"
+                id="reg-email"
+                placeholder="you@example.com"
+              />
+            </div>
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input type="tel" id="reg-phone" placeholder="+254 712 345 678" />
+            </div>
+            <div class="form-group">
+              <label>Password</label>
+              <input type="password" id="reg-password" placeholder="••••••••" />
+            </div>
+            <button class="btn-full" onclick="handleRegister()">
+              Create Account
+            </button>
+            <div class="auth-switch">
+              Already have an account?
+              <span onclick="toggleAuthMode()">Login</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================= -->
+    <!-- PAGE: SELLER DASHBOARD -->
+    <!-- ============================= -->
+    <div id="page-dashboard" class="page">
+      <div class="dashboard-wrap">
+        <div class="dash-header">
+          <h2 class="dash-title">Seller Dashboard</h2>
+          <span id="dash-welcome" style="font-size: 14px; color: #aaa"></span>
+        </div>
+        <div class="dash-tabs">
+          <button class="dash-tab active" onclick="switchDashTab('upload')">
+            Upload Product
+          </button>
+          <button class="dash-tab" onclick="switchDashTab('products')">
+            My Products
+          </button>
+          <button class="dash-tab" onclick="switchDashTab('orders')">
+            Orders
+          </button>
+          <button class="dash-tab" onclick="switchDashTab('settings')">
+            Settings
+          </button>
+        </div>
+
+        <!-- Upload Panel -->
+        <div class="dash-panel active" id="panel-upload">
+          <div class="upload-form">
+            <h3>List a New Product</h3>
+            <div class="form-group">
+              <label>Product Name</label>
+              <input
+                type="text"
+                id="p-name"
+                placeholder="e.g. Hand-knit Market Bag"
+              />
+            </div>
+            <div class="form-group">
+              <label>Category</label>
+              <select id="p-category">
+                <option value="bags">Bags</option>
+                <option value="hats">Hats</option>
+                <option value="decor">Decor</option>
+                <option value="clothing">Clothing</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Price (KSh)</label>
+              <input type="number" id="p-price" placeholder="850" />
+            </div>
+            <div class="form-group">
+              <label>Description</label>
+              <textarea
+                id="p-desc"
+                placeholder="Describe your product, materials used, size, care instructions…"
+              ></textarea>
+            </div>
+            <div class="form-group">
+              <label>Product Images (up to 5)</label>
+              <div
+                class="img-upload-area"
+                onclick="document.getElementById('p-images').click()"
+              >
+                <input
+                  type="file"
+                  id="p-images"
+                  accept="image/*"
+                  multiple
+                  onchange="handleImageUpload(event)"
+                />
+                <div style="font-size: 28px; margin-bottom: 6px">📷</div>
+                <div style="font-size: 14px; color: #aaa">
+                  Click to upload images
+                </div>
+              </div>
+              <div class="img-preview-grid" id="img-preview"></div>
+            </div>
+            <div class="form-group">
+              <label
+                >Slider / Featured Image (choose which image to feature)</label
+              >
+              <select id="p-slider-img" style="font-size: 13px">
+                <option value="0">Image 1 (default)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Contact (phone or email for orders)</label>
+              <input
+                type="text"
+                id="p-contact"
+                placeholder="+254 712 345 678 or seller@email.com"
+              />
+            </div>
+            <button
+              class="btn-full"
+              onclick="uploadProduct()"
+              style="margin-top: 10px"
+            >
+              Publish Product
+            </button>
+          </div>
+        </div>
+
+        <!-- My Products Panel -->
+        <div class="dash-panel" id="panel-products">
+          <div class="my-products-list" id="my-products-list"></div>
+        </div>
+
+        <!-- Orders Panel -->
+        <div class="dash-panel" id="panel-orders">
+          <div class="orders-list" id="orders-list"></div>
+        </div>
+
+        <!-- Settings Panel -->
+        <div class="dash-panel" id="panel-settings">
+          <div class="upload-form">
+            <h3>Store Settings</h3>
+            <div class="form-group">
+              <label>Store Name</label>
+              <input
+                type="text"
+                id="s-store-name"
+                placeholder="My Crochet Store"
+              />
+            </div>
+            <div class="form-group">
+              <label>Contact Phone</label>
+              <input type="text" id="s-phone" placeholder="+254 712 345 678" />
+            </div>
+            <div class="form-group">
+              <label>Contact Email</label>
+              <input type="email" id="s-email" placeholder="store@email.com" />
+            </div>
+            <div class="form-group">
+              <label>Store Bio</label>
+              <textarea
+                id="s-bio"
+                placeholder="Tell customers about your craft…"
+              ></textarea>
+            </div>
+            <button class="btn-full" onclick="saveSettings()">
+              Save Settings
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== FOOTER ===== -->
+    <footer>
+      <div>
+        <div class="footer-brand">TheWrittenWhispersCrochet</div>
+        <p>
+          Handmade crochet pieces made with love and care. Each piece is unique
+          and crafted to last.
+        </p>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#" onclick="showPage('home')">Shop All</a></li>
+          <li><a href="#" onclick="showPage('login')">Sell With Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <p>📧 hello@writtenwhispers.com</p>
+        <p>📞 +254 700 000 000</p>
+      </div>
+      <div class="footer-bottom">
+        &copy; 2025 TheWrittenWhispersCrochet. All rights reserved.
+      </div>
+    </footer>
+
+    <!-- ============================= -->
+    <!-- JAVASCRIPT -->
+    <!-- ============================= -->
+    <script>
+      /* =========================================================
+     STATE
+  ========================================================= */
+      let currentUser = JSON.parse(localStorage.getItem("tww_user")) || null;
+      let products =
+        JSON.parse(localStorage.getItem("tww_products")) || getSeedProducts();
+      let orders = JSON.parse(localStorage.getItem("tww_orders")) || [];
+      let cart = JSON.parse(localStorage.getItem("tww_cart")) || [];
+      let currentRole = "customer";
+      let sliderIndex = 0;
+      let sliderTimer = null;
+      let selectedProduct = null;
+      let uploadedImages = [];
+
+      /* =========================================================
+     SEED PRODUCTS (demo data)
+  ========================================================= */
+      function getSeedProducts() {
+        return [
+          {
+            id: "p1",
+            name: "Boho Market Bag",
+            category: "bags",
+            price: 1200,
+            desc: "Handwoven boho market bag perfect for groceries or beach days. Made from 100% cotton yarn.",
+            images: [
+              "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=600&q=80",
+            ],
+            sliderIdx: 0,
+            seller: "Amina K.",
+            contact: "+254 711 000 001",
+            sellerId: "seller1",
+            featured: true,
+          },
+          {
+            id: "p2",
+            name: "Cozy Winter Hat",
+            category: "hats",
+            price: 850,
+            desc: "Super warm crochet hat in merino wool blend. One size fits most adults.",
+            images: [
+              "https://images.unsplash.com/photo-1576871337622-98d48d1cf531?w=600&q=80",
+            ],
+            sliderIdx: 0,
+            seller: "Wanjiku M.",
+            contact: "+254 722 000 002",
+            sellerId: "seller2",
+            featured: true,
+          },
+          {
+            id: "p3",
+            name: "Sunflower Wall Hanging",
+            category: "decor",
+            price: 2200,
+            desc: "Beautiful macramé-inspired crochet wall hanging with sunflower motif. 45cm wide.",
+            images: [
+              "https://images.unsplash.com/photo-1589561253898-768105ca91a8?w=600&q=80",
+            ],
+            sliderIdx: 0,
+            seller: "Fatuma A.",
+            contact: "fatuma@email.com",
+            sellerId: "seller3",
+            featured: false,
+          },
+          {
+            id: "p4",
+            name: "Rainbow Baby Set",
+            category: "clothing",
+            price: 3500,
+            desc: "Adorable baby set including hat, booties and cardigan. 0-3 months. Machine washable.",
+            images: [
+              "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=600&q=80",
+            ],
+            sliderIdx: 0,
+            seller: "Amina K.",
+            contact: "+254 711 000 001",
+            sellerId: "seller1",
+            featured: false,
+          },
+          {
+            id: "p5",
+            name: "Plant Pot Holder Set",
+            category: "decor",
+            price: 950,
+            desc: "Set of 3 crochet pot holders in earthy tones. Holds pots up to 15cm diameter.",
+            images: [
+              "https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=600&q=80",
+            ],
+            sliderIdx: 0,
+            seller: "Wanjiku M.",
+            contact: "+254 722 000 002",
+            sellerId: "seller2",
+            featured: false,
+          },
+          {
+            id: "p6",
+            name: "Granny Square Tote",
+            category: "bags",
+            price: 1600,
+            desc: "Classic granny square pattern tote bag in multicolor. Fully lined with cotton fabric.",
+            images: [
+              "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&q=80",
+            ],
+            sliderIdx: 0,
+            seller: "Fatuma A.",
+            contact: "fatuma@email.com",
+            sellerId: "seller3",
+            featured: true,
+          },
+        ];
+      }
+
+      function save() {
+        localStorage.setItem("tww_products", JSON.stringify(products));
+        localStorage.setItem("tww_orders", JSON.stringify(orders));
+        localStorage.setItem("tww_cart", JSON.stringify(cart));
+        if (currentUser)
+          localStorage.setItem("tww_user", JSON.stringify(currentUser));
+      }
+
+      /* =========================================================
+     PAGE ROUTING
+  ========================================================= */
+      function showPage(page) {
+        document
+          .querySelectorAll(".page")
+          .forEach((p) => p.classList.remove("active"));
+        document.getElementById("page-" + page).classList.add("active");
+        window.scrollTo(0, 0);
+        if (page === "home") renderHome();
+        if (page === "dashboard") renderDashboard();
+      }
+
+      /* =========================================================
+     NAV STATE
+  ========================================================= */
+      function updateNav() {
+        const loggedIn = !!currentUser;
+        document
+          .getElementById("nav-auth-btn")
+          .classList.toggle("hidden", loggedIn);
+        document
+          .getElementById("nav-logout-btn")
+          .classList.toggle("hidden", !loggedIn);
+        document
+          .getElementById("nav-dash-btn")
+          .classList.toggle(
+            "hidden",
+            !loggedIn || currentUser.role !== "seller",
+          );
+      }
+
+      function logout() {
+        currentUser = null;
+        localStorage.removeItem("tww_user");
+        updateNav();
+        showPage("home");
+        toast("Logged out. See you soon! 👋");
+      }
+
+      /* =========================================================
+     AUTH
+  ========================================================= */
+      function switchRole(role) {
+        currentRole = role;
+        document
+          .getElementById("tab-customer")
+          .classList.toggle("active", role === "customer");
+        document
+          .getElementById("tab-seller")
+          .classList.toggle("active", role === "seller");
+      }
+
+      function toggleAuthMode() {
+        const loginForm = document.getElementById("form-login");
+        const registerForm = document.getElementById("form-register");
+        loginForm.classList.toggle("hidden");
+        registerForm.classList.toggle("hidden");
+      }
+
+      function handleLogin() {
+        const email = document.getElementById("login-email").value.trim();
+        const pass = document.getElementById("login-password").value;
+        if (!email || !pass) return toast("Please fill in all fields.");
+        const users = JSON.parse(localStorage.getItem("tww_users") || "[]");
+        const user = users.find(
+          (u) =>
+            u.email === email && u.password === pass && u.role === currentRole,
+        );
+        if (!user) return toast("Invalid credentials. Try registering first.");
+        currentUser = user;
+        save();
+        updateNav();
+        toast("Welcome back, " + user.name + "! 🎉");
+        showPage(user.role === "seller" ? "dashboard" : "home");
+      }
+
+      function handleRegister() {
+        const name = document.getElementById("reg-name").value.trim();
+        const email = document.getElementById("reg-email").value.trim();
+        const phone = document.getElementById("reg-phone").value.trim();
+        const pass = document.getElementById("reg-password").value;
+        if (!name || !email || !pass)
+          return toast("Please fill in all required fields.");
+        const users = JSON.parse(localStorage.getItem("tww_users") || "[]");
+        if (users.find((u) => u.email === email))
+          return toast("Email already registered.");
+        const newUser = {
+          id: "u" + Date.now(),
+          name,
+          email,
+          phone,
+          password: pass,
+          role: currentRole,
+        };
+        users.push(newUser);
+        localStorage.setItem("tww_users", JSON.stringify(users));
+        currentUser = newUser;
+        save();
+        updateNav();
+        toast("Account created! Welcome, " + name + " 🌸");
+        showPage(currentRole === "seller" ? "dashboard" : "home");
+      }
+
+      /* =========================================================
+     HERO SLIDER
+  ========================================================= */
+      function buildSlider() {
+        const featured = products.filter((p) => p.featured).slice(0, 5);
+        const wrap = document.getElementById("hero-slides");
+        const dots = document.getElementById("slider-dots");
+        wrap.innerHTML = "";
+        dots.innerHTML = "";
+        if (!featured.length) {
+          wrap.innerHTML =
+            '<div class="hero-slide" style="min-width:100%"><div class="hero-content"><h1>Handmade Crochet</h1><p>Unique pieces crafted with love</p><button class="hero-cta" onclick="document.getElementById(\'product-grid\').scrollIntoView({behavior:\'smooth\'})">Shop Now</button></div></div>';
+          return;
+        }
+        featured.forEach((p, i) => {
+          const slide = document.createElement("div");
+          slide.className = "hero-slide";
+          slide.innerHTML = `
+        <img src="${p.images[p.sliderIdx] || p.images[0]}" alt="${p.name}" loading="lazy"/>
+        <div class="hero-content">
+          <h1>${p.name}</h1>
+          <p>${p.desc.slice(0, 80)}…</p>
+          <button class="hero-cta" onclick="openModal('${p.id}')">View Product</button>
+        </div>`;
+          wrap.appendChild(slide);
+          const dot = document.createElement("button");
+          dot.className = "dot" + (i === 0 ? " active" : "");
+          dot.onclick = () => goToSlide(i);
+          dots.appendChild(dot);
+        });
+        goToSlide(0);
+        clearInterval(sliderTimer);
+        sliderTimer = setInterval(() => changeSlide(1), 5000);
+      }
+
+      function goToSlide(i) {
+        const slides = document.querySelectorAll(".hero-slide");
+        if (!slides.length) return;
+        sliderIndex = (i + slides.length) % slides.length;
+        document.getElementById("hero-slides").style.transform =
+          `translateX(-${sliderIndex * 100}%)`;
+        document
+          .querySelectorAll(".dot")
+          .forEach((d, idx) =>
+            d.classList.toggle("active", idx === sliderIndex),
+          );
+      }
+
+      function changeSlide(dir) {
+        goToSlide(sliderIndex + dir);
+      }
+
+      /* =========================================================
+     PRODUCT GRID
+  ========================================================= */
+      let activeFilter = "all";
+      function renderHome() {
+        buildSlider();
+        filterProducts(activeFilter);
+      }
+
+      function filterProducts(cat) {
+        activeFilter = cat;
+        document
+          .querySelectorAll("#filter-btns .dash-tab")
+          .forEach((b) => b.classList.remove("active"));
+        document.getElementById("filter-" + cat)?.classList.add("active");
+        const list =
+          cat === "all" ? products : products.filter((p) => p.category === cat);
+        const grid = document.getElementById("product-grid");
+        grid.innerHTML = "";
+        if (!list.length) {
+          grid.innerHTML =
+            '<p style="color:#aaa;grid-column:1/-1">No products in this category yet.</p>';
+          return;
+        }
+        list.forEach((p) => {
+          const card = document.createElement("div");
+          card.className = "product-card";
+          card.onclick = () => openModal(p.id);
+          card.innerHTML = `
+        <div class="product-img-wrap">
+          <img src="${p.images[p.sliderIdx] || p.images[0]}" alt="${p.name}" loading="lazy"/>
+          <span class="product-badge">${p.category}</span>
+        </div>
+        <div class="product-info">
+          <div class="product-name">${p.name}</div>
+          <div class="product-seller">by ${p.seller}</div>
+          <div class="product-bottom">
+            <div class="product-price">KSh ${Number(p.price).toLocaleString()}</div>
+            <button class="add-cart-btn" onclick="event.stopPropagation();addToCart('${p.id}')">+ Cart</button>
+          </div>
+        </div>`;
+          grid.appendChild(card);
+        });
+      }
+
+      /* =========================================================
+     MODAL
+  ========================================================= */
+      function openModal(id) {
+        const p = products.find((pr) => pr.id === id);
+        if (!p) return;
+        selectedProduct = p;
+        document.getElementById("modal-img").src =
+          p.images[p.sliderIdx] || p.images[0];
+        document.getElementById("modal-name").textContent = p.name;
+        document.getElementById("modal-price").textContent =
+          "KSh " + Number(p.price).toLocaleString();
+        document.getElementById("modal-desc").textContent = p.desc;
+        const isPhone = p.contact && /^\+/.test(p.contact);
+        document.getElementById("modal-seller-info").innerHTML = `
+      <strong>Sold by ${p.seller}</strong>
+      ${
+        isPhone
+          ? `📞 <a href="https://wa.me/${p.contact.replace(/\D/g, "")}" target="_blank">${p.contact}</a>`
+          : `📧 <a href="mailto:${p.contact}">${p.contact}</a>`
+      }`;
+        document.getElementById("product-modal").classList.remove("hidden");
+      }
+
+      function closeModal(e) {
+        if (e.target === document.getElementById("product-modal"))
+          document.getElementById("product-modal").classList.add("hidden");
+      }
+
+      function placeOrder() {
+        if (!selectedProduct) return;
+        if (!currentUser) {
+          toast("Please login to place an order.");
+          return;
+        }
+        const order = {
+          id: "ord-" + Date.now(),
+          productId: selectedProduct.id,
+          productName: selectedProduct.name,
+          productImg: selectedProduct.images[0],
+          price: selectedProduct.price,
+          buyer: currentUser.name,
+          buyerContact: currentUser.phone || currentUser.email,
+          sellerId: selectedProduct.sellerId,
+          status: "pending",
+          date: new Date().toLocaleDateString(),
+        };
+        orders.push(order);
+        save();
+        document.getElementById("product-modal").classList.add("hidden");
+        toast(
+          `Order placed! ${selectedProduct.seller} will contact you at ${order.buyerContact} 🎉`,
+        );
+      }
+
+      function addToCartFromModal() {
+        if (selectedProduct) addToCart(selectedProduct.id);
+        document.getElementById("product-modal").classList.add("hidden");
+      }
+
+      /* =========================================================
+     CART
+  ========================================================= */
+      function addToCart(id) {
+        const p = products.find((pr) => pr.id === id);
+        if (!p) return;
+        const existing = cart.find((c) => c.id === id);
+        if (existing) existing.qty = (existing.qty || 1) + 1;
+        else
+          cart.push({
+            id: p.id,
+            name: p.name,
+            price: p.price,
+            img: p.images[0],
+            qty: 1,
+          });
+        save();
+        updateCartCount();
+        toast("Added to cart 🛒");
+      }
+
+      function updateCartCount() {
+        const total = cart.reduce((s, c) => s + (c.qty || 1), 0);
+        document.getElementById("cart-count").textContent = total;
+      }
+
+      function toggleCart() {
+        const sidebar = document.getElementById("cart-sidebar");
+        const overlay = document.getElementById("cart-overlay");
+        const isOpen = !sidebar.classList.contains("hidden");
+        sidebar.classList.toggle("hidden", isOpen);
+        overlay.classList.toggle("hidden", isOpen);
+        if (!isOpen) renderCart();
+      }
+
+      function renderCart() {
+        const list = document.getElementById("cart-items-list");
+        if (!cart.length) {
+          list.innerHTML =
+            '<div class="cart-empty">Your cart is empty 🧶</div>';
+          document.getElementById("cart-total-price").textContent = "KSh 0";
+          return;
+        }
+        list.innerHTML = "";
+        let total = 0;
+        cart.forEach((item) => {
+          total += item.price * (item.qty || 1);
+          const el = document.createElement("div");
+          el.className = "cart-item";
+          el.innerHTML = `<img src="${item.img}" alt="${item.name}"/><div class="cart-item-info"><strong>${item.name}</strong><span>KSh ${Number(item.price).toLocaleString()} × ${item.qty}</span></div><button class="cart-item-remove" onclick="removeFromCart('${item.id}')">✕</button>`;
+          list.appendChild(el);
+        });
+        document.getElementById("cart-total-price").textContent =
+          "KSh " + total.toLocaleString();
+      }
+
+      function removeFromCart(id) {
+        cart = cart.filter((c) => c.id !== id);
+        save();
+        updateCartCount();
+        renderCart();
+      }
+
+      function checkout() {
+        if (!currentUser) {
+          toast("Please login to checkout.");
+          return;
+        }
+        if (!cart.length) return toast("Your cart is empty.");
+        cart.forEach((item) => {
+          const p = products.find((pr) => pr.id === item.id);
+          if (!p) return;
+          orders.push({
+            id: "ord-" + Date.now() + Math.random(),
+            productId: item.id,
+            productName: item.name,
+            productImg: item.img,
+            price: item.price,
+            buyer: currentUser.name,
+            buyerContact: currentUser.phone || currentUser.email,
+            sellerId: p.sellerId,
+            status: "pending",
+            date: new Date().toLocaleDateString(),
+          });
+        });
+        cart = [];
+        save();
+        updateCartCount();
+        renderCart();
+        toggleCart();
+        toast("Order placed for all items! Sellers will be in touch 🎉");
+      }
+
+      /* =========================================================
+     SELLER DASHBOARD
+  ========================================================= */
+      function renderDashboard() {
+        if (!currentUser) return;
+        document.getElementById("dash-welcome").textContent =
+          "Welcome, " + currentUser.name;
+        renderMyProducts();
+        renderOrders();
+      }
+
+      function switchDashTab(tab) {
+        document
+          .querySelectorAll(".dash-panel")
+          .forEach((p) => p.classList.remove("active"));
+        document
+          .querySelectorAll(".dash-tab")
+          .forEach((b) => b.classList.remove("active"));
+        document.getElementById("panel-" + tab).classList.add("active");
+        event.target.classList.add("active");
+        if (tab === "products") renderMyProducts();
+        if (tab === "orders") renderOrders();
+      }
+
+      /* Image upload preview */
+      function handleImageUpload(e) {
+        uploadedImages = [];
+        const files = Array.from(e.target.files).slice(0, 5);
+        const preview = document.getElementById("img-preview");
+        const sliderSel = document.getElementById("p-slider-img");
+        preview.innerHTML = "";
+        sliderSel.innerHTML = "";
+        files.forEach((file, i) => {
+          const reader = new FileReader();
+          reader.onload = (ev) => {
+            uploadedImages[i] = ev.target.result;
+            const img = document.createElement("img");
+            img.src = ev.target.result;
+            preview.appendChild(img);
+            const opt = document.createElement("option");
+            opt.value = i;
+            opt.textContent = "Image " + (i + 1);
+            sliderSel.appendChild(opt);
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+
+      function uploadProduct() {
+        const name = document.getElementById("p-name").value.trim();
+        const category = document.getElementById("p-category").value;
+        const price = document.getElementById("p-price").value;
+        const desc = document.getElementById("p-desc").value.trim();
+        const contact = document.getElementById("p-contact").value.trim();
+        const sliderIdx =
+          parseInt(document.getElementById("p-slider-img").value) || 0;
+        if (!name || !price || !desc)
+          return toast("Please fill in name, price and description.");
+        if (!currentUser) return toast("Please login as a seller.");
+        const imgs = uploadedImages.length
+          ? uploadedImages
+          : [
+              "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=600&q=80",
+            ];
+        const product = {
+          id: "p" + Date.now(),
+          name,
+          category,
+          price: parseFloat(price),
+          desc,
+          images: imgs,
+          sliderIdx,
+          seller: currentUser.name,
+          contact: contact || currentUser.phone || currentUser.email,
+          sellerId: currentUser.id,
+          featured: false,
+        };
+        products.unshift(product);
+        save();
+        toast("Product published! 🎉");
+        document.getElementById("p-name").value = "";
+        document.getElementById("p-price").value = "";
+        document.getElementById("p-desc").value = "";
+        document.getElementById("p-contact").value = "";
+        document.getElementById("img-preview").innerHTML = "";
+        uploadedImages = [];
+        renderMyProducts();
+      }
+
+      function renderMyProducts() {
+        if (!currentUser) return;
+        const mine = products.filter((p) => p.sellerId === currentUser.id);
+        const list = document.getElementById("my-products-list");
+        list.innerHTML = "";
+        if (!mine.length) {
+          list.innerHTML =
+            '<p style="color:#aaa">You have not listed any products yet.</p>';
+          return;
+        }
+        mine.forEach((p) => {
+          const el = document.createElement("div");
+          el.className = "my-product-card";
+          el.innerHTML = `
+        <img src="${p.images[p.sliderIdx] || p.images[0]}" alt="${p.name}"/>
+        <div class="mp-info">
+          <div class="mp-name">${p.name}</div>
+          <div class="mp-price">KSh ${Number(p.price).toLocaleString()}</div>
+          <div class="mp-actions">
+            <button class="btn-edit-p" onclick="toggleFeatured('${p.id}')">${p.featured ? "★ Featured" : "☆ Feature"}</button>
+            <button class="btn-del-p"  onclick="deleteProduct('${p.id}')">Delete</button>
+          </div>
+        </div>`;
+          list.appendChild(el);
+        });
+      }
+
+      function toggleFeatured(id) {
+        const p = products.find((pr) => pr.id === id);
+        if (p) {
+          p.featured = !p.featured;
+          save();
+          renderMyProducts();
+          toast(
+            p.featured ? "Now featured on slider!" : "Removed from slider.",
+          );
+        }
+      }
+
+      function deleteProduct(id) {
+        if (!confirm("Delete this product?")) return;
+        products = products.filter((p) => p.id !== id);
+        save();
+        renderMyProducts();
+        toast("Product deleted.");
+      }
+
+      function renderOrders() {
+        if (!currentUser) return;
+        const mine = orders.filter((o) => o.sellerId === currentUser.id);
+        const list = document.getElementById("orders-list");
+        list.innerHTML = "";
+        if (!mine.length) {
+          list.innerHTML =
+            '<p style="color:#aaa">No orders yet. Share your listings!</p>';
+          return;
+        }
+        mine.forEach((o) => {
+          const el = document.createElement("div");
+          el.className = "order-item";
+          el.innerHTML = `
+        <img class="order-img" src="${o.productImg}" alt=""/>
+        <div class="order-details">
+          <strong>${o.productName}</strong>
+          <span>Buyer: ${o.buyer} · ${o.buyerContact}</span>
+          <span style="display:block;margin-top:3px;font-size:12px;color:#bbb">${o.date}</span>
+        </div>
+        <div style="font-weight:700;color:var(--rose)">KSh ${Number(o.price).toLocaleString()}</div>
+        <span class="order-status ${o.status === "done" ? "status-done" : "status-pending"}" onclick="toggleOrderStatus('${o.id}')" style="cursor:pointer">${o.status === "done" ? "Done ✓" : "Pending"}</span>`;
+          list.appendChild(el);
+        });
+      }
+
+      function toggleOrderStatus(id) {
+        const o = orders.find((or) => or.id === id);
+        if (o) {
+          o.status = o.status === "done" ? "pending" : "done";
+          save();
+          renderOrders();
+        }
+      }
+
+      function saveSettings() {
+        if (!currentUser) return;
+        currentUser.storeName = document
+          .getElementById("s-store-name")
+          .value.trim();
+        currentUser.phone = document.getElementById("s-phone").value.trim();
+        currentUser.email = document.getElementById("s-email").value.trim();
+        currentUser.bio = document.getElementById("s-bio").value.trim();
+        save();
+        toast("Settings saved! ✅");
+      }
+
+      /* =========================================================
+     TOAST
+  ========================================================= */
+      function toast(msg) {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.classList.add("show");
+        setTimeout(() => t.classList.remove("show"), 3000);
+      }
+
+      /* =========================================================
+     INIT
+  ========================================================= */
+      updateNav();
+      updateCartCount();
+      renderHome();
+    </script>
   </body>
 </html>
